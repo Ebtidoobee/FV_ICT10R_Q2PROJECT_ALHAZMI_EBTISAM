@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <title>Lunarity University — Student Grade Calculator</title>
+
+    <style>
+        :root {
+            --primary-color: #580000;
+            --secondary-color: #FFD700;
+            --background-dark: #121212;
+            --background-light: #1e1e1e;
+            --text-light: #E0E0E0;
+            --radius: 14px;
+            --glow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 30px #FFD700;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1b1b1b 100%);
+            font-family: 'Inter', sans-serif;
+            padding-top: 90px;
+            color: var(--text-light);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .navbar-custom {
+            background-color: var(--primary-color);
+            padding: 14px 8%;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.8);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--secondary-color) !important;
+            font-size: 1.6em;
+            text-shadow: var(--glow);
+            transition: all 0.3s;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            filter: drop-shadow(0 0 6px rgba(255,215,0,0.6));
+            transition: transform 0.4s, filter 0.4s;
+        }
+
+        .navbar-brand img:hover {
+            transform: rotate(-15deg) scale(1.2);
+            filter: drop-shadow(0 0 15px #FFD700);
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-light) !important;
+            margin-left: 30px;
+            transition: color 0.3s, text-shadow 0.3s, transform 0.3s;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--secondary-color) !important;
+            text-shadow: var(--glow);
+            transform: scale(1.1);
+        }
+
+        .container {
+            max-width: 880px;
+            background: linear-gradient(145deg, #1e1e1e, #252525);
+            padding: 50px;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            border-left: 8px solid var(--secondary-color);
+            animation: floatIn 1s ease-out forwards;
+        }
+
+        @keyframes floatIn {
+            0% { transform: translateY(50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: var(--glow);
+            letter-spacing: 1px;
+            font-size: 2.6em;
+        }
+
+        h2.h5 {
+            color: var(--text-light);
+            margin-top: 35px;
+        }
+
+        label {
+            color: var(--text-light);
+        }
+
+        .form-control {
+            background-color: #2a2a2a;
+            border: 1px solid var(--secondary-color);
+            color: var(--text-light);
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            background-color: #2a2a2a;
+            color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 12px rgba(255,215,0,0.5);
+        }
+
+        .input-group-text {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            font-weight: 700;
+            border: none;
+            border-radius: 12px 0 0 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FFD700, #FFEA50);
+            color: var(--primary-color);
+            border: none;
+            font-weight: 700;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: var(--glow);
+            font-size: 1.1em;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700, 0 0 40px #FFD700;
+        }
+
+        .card {
+            background-color: #181818;
+            border-radius: 14px;
+            border-left: 6px solid var(--secondary-color);
+            color: var(--text-light);
+            box-shadow: 0 8px 20px rgba(255,215,0,0.3);
+            padding: 20px;
+            margin-top: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255,215,0,0.5);
+        }
+
+        #student_info {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        #summary {
+            background-color: #0f0f0f;
+            color: var(--text-light);
+            border-radius: 10px;
+            border: 1px solid var(--secondary-color);
+            font-family: "Courier New", monospace;
+            padding: 14px;
+            transition: all 0.3s;
+        }
+
+        #output {
+            color: var(--secondary-color);
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #FFD700;
+        }
+
+        hr {
+            border: 1px solid var(--secondary-color);
+            opacity: 0.6;
+        }
+
+        .footer {
+            background-color: #1a1a1a;
+            color: #FFD700;
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 50px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.8);
+            border-top: 2px solid #FFD700;
+            text-shadow: var(--glow);
+        }
+
+        .footer span {
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <a class="navbar-brand" href="#">
+        <img src="logo.jpg" alt="Logo">
+        LUNARITY UNIVERSITY
+    </a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="programs.html">Programs</a></li>
+            <li class="nav-item"><a class="nav-link" href="student.html">Student Portal</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <h1>Student Grade Calculator</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" id="first_name" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" id="last_name" class="form-control">
+        </div>
+    </div>
+
+    <h2 class="h5">Grades (0–100)</h2>
+
+    <div class="input-group mb-2">
+        <span class="input-group-text">Science</span>
+        <input type="text" id="science_grade" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+        <span class="input-group-text">Math</span>
+        <input type="text" id="math_grade" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+        <span class="input-group-text">English</span>
+        <input type="text" id="english_grade" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+        <span class="input-group-text">Filipino</span>
+        <input type="text" id="filipino_grade" class="form-control">
+    </div>
+    <div class="input-group mb-2">
+        <span class="input-group-text">ICT</span>
+        <input type="text" id="ict_grade" class="form-control">
+    </div>
+    <div class="input-group mb-4">
+        <span class="input-group-text">PE</span>
+        <input type="text" id="pe_grade" class="form-control">
+    </div>
+
+    <button class="btn btn-primary w-100 py-2" py-click="general_weighted_average">
+        Calculate GWA
+    </button>
+
+    <hr class="mt-4">
+
+    <div class="card p-3 mt-4">
+        <p class="mb-1">Student Info: <strong id="student_info"></strong></p>
+        <p class="mb-1">Grade Summary:</p>
+        <pre id="summary"></pre>
+        <h4 class="mt-2">Overall GWA: <span id="output"></span></h4>
+    </div>
+</div>
+
+<py-config>
+    [[fetch]]
+    files = ["main3.py"]
+</py-config>
+<py-script src="main3.py"></py-script>
+
+<div class="footer">
+    © 2025 Lunarity University • Angeles City Campus • <span>Empowering Minds, Inspiring Futures</span>
+</div>
+
+</body>
+</html>
